@@ -62,3 +62,12 @@ class ToDoItemDeleteView(APIView):
         self.check_object_permissions(request, todo_item)
         todo_item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ToDoItemListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        todo_items = ToDoItem.objects.all()
+        serializer = ToDoItemSerializer(todo_items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
