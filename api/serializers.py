@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
 
 User = get_user_model()
 
@@ -43,3 +44,23 @@ class UserRegisterSerializer(serializers.Serializer):
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }
+
+
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+        if email and password:
+            user = authenticate(email=email, password=password)
+            if user:
+                if not user.is_active:
+                    raise serializers.ValidationError("این کاربر غیرفعال است")
+                data['user'] = user
+            else:
+                raise serializers.ValidationError("ایمیل  یا پسورد اشتباه است.")
+        else:
+            raise serializers.ValidationError("ایمیل و پسورد الزامی است")
+        return data
