@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from todos.models import ToDoItem
 
 User = get_user_model()
 
@@ -64,3 +65,15 @@ class UserLoginSerializer(serializers.Serializer):
         else:
             raise serializers.ValidationError("ایمیل و پسورد الزامی است")
         return data
+
+
+class ToDoItemSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ToDoItem
+        fields = ['id', 'title', 'description', 'user']
+        read_only_fields = ['user']
+    
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
