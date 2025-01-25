@@ -52,3 +52,13 @@ class ToDoItemUpdateView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ToDoItemDeleteView(APIView):
+    permission_classes = [IsAuthenticated, IsCreaterOrReadOnly]
+
+    def delete(self, request, pk):
+        todo_item = get_object_or_404(ToDoItem, pk=pk)
+        self.check_object_permissions(request, todo_item)
+        todo_item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
