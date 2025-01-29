@@ -7,10 +7,12 @@ from django.shortcuts import get_object_or_404
 from .serializers import UserRegisterSerializer, UserLoginSerializer, ToDoItemSerializer
 from .permissions import IsCreaterOrReadOnly
 from todos.models import ToDoItem
+from .swagger_configs import *
 
 
 class RegisterView(APIView):
 
+    @post_register_swagger
     def post(self, request):
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
@@ -67,6 +69,7 @@ class ToDoItemDeleteView(APIView):
 class ToDoItemListView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @get_list_swagger
     def get(self, request):
         todo_items = ToDoItem.objects.all()
         serializer = ToDoItemSerializer(todo_items, many=True)
