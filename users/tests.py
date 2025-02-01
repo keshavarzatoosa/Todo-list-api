@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from .forms import CustomUserCreationForm
 
 User = get_user_model()
 
@@ -56,3 +57,26 @@ class CustomUserTests(TestCase):
                 password='adminpassword123',
                 is_superuser=False 
             )
+
+
+class CustomUserFormTests(TestCase):
+
+    def test_user_creation_form(self):
+        form_data = {
+            'email': 'test@example.com',
+            'name': 'Test User',
+            'password1': 'testpass123',
+            'password2': 'testpass123'
+        }
+        form = CustomUserCreationForm(data=form_data)
+        self.assertTrue(form.is_valid())
+    
+    def test_user_creation_form_invalid(self):
+        form_data = {
+            'email': 'invalid-email',
+            'name': '',
+            'password1': 'testpass123',
+            'password2': 'testpass123'
+        }
+        form = CustomUserCreationForm(data=form_data)
+        self.assertFalse(form.is_valid())
