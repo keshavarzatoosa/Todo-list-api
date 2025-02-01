@@ -130,6 +130,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK ={
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
+    'DEFAULT_THROTTLE_CLASSES': [
+    'rest_framework.throttling.UserRateThrottle',
+    'rest_framework.throttling.AnonRateThrottle',
+    'api.throttles.CustomRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'custom_user': '5/minute',
+        'superuser': '50/hour',
+        'user': '10/hour',
+        # 'anon': '10/minute',
+    }
 }
 
 from datetime import timedelta

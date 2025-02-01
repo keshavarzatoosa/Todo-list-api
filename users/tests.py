@@ -70,7 +70,7 @@ class CustomUserFormTests(TestCase):
         }
         form = CustomUserCreationForm(data=form_data)
         self.assertTrue(form.is_valid())
-    
+
     def test_user_creation_form_invalid(self):
         form_data = {
             'email': 'invalid-email',
