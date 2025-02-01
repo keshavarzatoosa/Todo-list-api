@@ -8,6 +8,13 @@ User = get_user_model()
 
 class CustomUserTests(TestCase):
 
+    def test_str_representation(self):
+        user = User(email='test@example.com',
+                    name='Test User',
+                    password='testpassword123' )
+        expected_str = 'test@example.com'
+        self.assertEqual(str(user), expected_str)
+
     def test_create_user(self):
         user = User.objects.create_user(
            email='test@example.com',
