@@ -80,3 +80,17 @@ class CustomUserFormTests(TestCase):
         }
         form = CustomUserCreationForm(data=form_data)
         self.assertFalse(form.is_valid())
+
+
+class CustomUserSignalTest(TestCase):
+    def test_is_staff_updated_on_save(self):
+        user = User(
+                email='admin@example.com',
+                name='Admin User',
+                password='adminpassword123',
+                is_superuser=True
+            )
+        self.assertFalse(user.is_staff)
+        user.save()
+        user.refresh_from_db()
+        self.assertTrue(user.is_staff)
